@@ -1,16 +1,15 @@
-package com.example.b2c.dto;
+package com.example.B2C.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
 import lombok.SneakyThrows;
 
-@Data
-public class AccessTknrsp {
+@JsonIgnoreProperties(ignoreUnknown = true) // Ignores any extra fields not mapped
+public class AccessToken {
 
-
-
-    @JsonProperty("access_token")
+    @JsonProperty("access_token") // Correctly maps the JSON field to Java field
     private String accessToken;
 
     @JsonProperty("expires_in")
@@ -18,6 +17,10 @@ public class AccessTknrsp {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 
     public String getExpiresIn() {
@@ -36,9 +39,5 @@ public class AccessTknrsp {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public Object getAccessToken() {
-        return accessToken;
     }
 }
