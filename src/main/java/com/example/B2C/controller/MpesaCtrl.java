@@ -10,6 +10,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
+/*import com.africastalking.Callback;
+import com.africastalking.SmsService;
+import com.africastalking.sms.Message;
+import com.africastalking.sms.Recipient;
+import com.africastalking.AfricasTalking;*/
+
+import java.util.List;
+import java.io.IOException;
+
 
 @RestController
 public class MpesaCtrl {
@@ -39,11 +48,6 @@ public class MpesaCtrl {
             }
 
             String responseBody = response.body().string();
-//            System.out.println("Response Body: " + responseBody);  // Debugging
-//            String resu = responseBody['access_token'];
-//            return responseBody['access_token'];
-
-
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             String accessToken = jsonNode.get("access_token").asText();
@@ -63,24 +67,7 @@ public class MpesaCtrl {
     public ResponseEntity<Object> getTransaction(){
 
         ObjectMapper objectMapper = new ObjectMapper();
-//        String jsonPayload;
 
-//        try {
-//            B2CTransactionRequest transactionRequest = new B2CTransactionRequest();
-//            // Populate the request object (set values as needed)
-//
-//            transactionRequest.setCommandID("BusinessPayment");
-//            transactionRequest.setAmount("1000");
-//            transactionRequest.setPartyA("600000");
-//            transactionRequest.setPartyB("254700000000");
-//            transactionRequest.setRemarks("Test Payment");
-//            transactionRequest.setOccassion("Occasion Test");
-//
-//            jsonPayload = objectMapper.writeValueAsString(transactionRequest);
-//            System.out.println("Generated JSON Payload: " + jsonPayload);
-//        } catch (JsonProcessingException e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating JSON");
-//        }
         String jsonPayload = "{"
                 + "\"OriginatorConversationID\": \"ca8c947c-f751-4855-8611-c173cfb42\","
                 + "\"InitiatorName\": \"testapi\","
@@ -99,9 +86,6 @@ public class MpesaCtrl {
                 MediaType.parse("application/json"),
                 jsonPayload
         );
-
-//        System.out.println(String.format("BEARER_AUTH_STRING" +getToken().toString()));
-
         // Build the HTTP request
         Request request = new Request.Builder()
                 .url("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest")
@@ -123,6 +107,50 @@ public class MpesaCtrl {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Request failed: " + e.getMessage());
         }
     }
+
+
+    @PostMapping("/sendSMS")
+    /* Import SDK classes */
+
+
+    public class TestSendingWithSenderID {
+
+        public static void main(String[] args) {
+            /* Set your app credentials */
+            String USERNAME = "MyAppUsername";
+            String API_KEY = "MyAppAPIKey";
+
+            /* Initialize SDK */
+            AfricasTalking.initialize(USERNAME, API_KEY);
+
+            /* Get the SMS service */
+            SmsService sms = AfricasTalking.getService(AfricasTalking.SERVICE_SMS);
+
+            /* Set the numbers you want to send to in international format */
+            String[] recipients = new String[] {
+                    "+254711XXXYYY", "+254702XXXYYY"
+            };
+
+            /* Set your message */
+            String message = "We are lumberjacks. We sleep all day and code all night";
+
+            /* Set your shortCode or senderId */
+            String from = "XXXXX"; // or "ABCDE"
+
+            /* That’s it, hit send and we’ll take care of the rest */
+            try {
+                List<Recipient> response = sms.send(message, from, recipients, true);
+                for (Recipient recipient : response) {
+                    System.out.print(recipient.number);
+                    System.out.print(" : ");
+                    System.out.println(recipient.status);
+                }
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 
 
 
