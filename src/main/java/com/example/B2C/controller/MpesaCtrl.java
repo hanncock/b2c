@@ -82,13 +82,13 @@ public class MpesaCtrl {
 //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error generating JSON");
 //        }
         String jsonPayload = "{"
-//                + "\"OriginatorConversationID\": \"ca8c947c-f751-4855-8611-c173cfb42\","
-//                + "\"InitiatorName\": \"testapi\","
-//                + "\"SecurityCredential\": \"KO6QewarUnMFU4KzQfiwPoSJFj1FFuJxQlHPHJ6QK85mzbAalu9nluSdD04Bo2dS8SffNAONX0RRMy0Y3XuMKyXABshYxfEs6dfKftJhEQqI5USgmVLgNe96T505OC2KfuW6OSpFJpxw9nykP+rnq7wWoRrBatAwk3tH8Sj6M21DZlbSOCDNtagTbauBJQcYkG3J9qZ43vZPCDwZaaNcIiP4jnfg83lMmhzfVzrCTxGgIhiBQFnZTu5NUo03f5RNhx/CHtYmwYJdfb1WNsOhBlWr/RsQW7L2+zYocSbBJ5A9t58XvyYCNofcRHF/F5IIgJk/FahXaFz4jPJq3eTonA==\","
-//                + "\"CommandID\": \"BusinessPayment\","
-//                + "\"Amount\": 10,"
-//                + "\"PartyA\": 600999,"
-//                + "\"PartyB\": 254700202696,"
+                + "\"OriginatorConversationID\": \"ca8c947c-f751-4855-8611-c173cfb42\","
+                + "\"InitiatorName\": \"testapi\","
+                + "\"SecurityCredential\": \"KO6QewarUnMFU4KzQfiwPoSJFj1FFuJxQlHPHJ6QK85mzbAalu9nluSdD04Bo2dS8SffNAONX0RRMy0Y3XuMKyXABshYxfEs6dfKftJhEQqI5USgmVLgNe96T505OC2KfuW6OSpFJpxw9nykP+rnq7wWoRrBatAwk3tH8Sj6M21DZlbSOCDNtagTbauBJQcYkG3J9qZ43vZPCDwZaaNcIiP4jnfg83lMmhzfVzrCTxGgIhiBQFnZTu5NUo03f5RNhx/CHtYmwYJdfb1WNsOhBlWr/RsQW7L2+zYocSbBJ5A9t58XvyYCNofcRHF/F5IIgJk/FahXaFz4jPJq3eTonA==\","
+                + "\"CommandID\": \"BusinessPayment\","
+                + "\"Amount\": 10,"
+                + "\"PartyA\": 600999,"
+                + "\"PartyB\": 254700202696,"
                 + "\"Remarks\": \"Test remarks\","
                 + "\"QueueTimeOutURL\": \"https://mydomain.com/b2c/queue\","
                 + "\"ResultURL\": \"https://mydomain.com/b2c/result\","
@@ -100,13 +100,15 @@ public class MpesaCtrl {
                 jsonPayload
         );
 
+//        System.out.println(String.format("BEARER_AUTH_STRING" +getToken().toString()));
+
         // Build the HTTP request
         Request request = new Request.Builder()
                 .url("https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest")
                 .post(body)
-//                .addHeader("Authorization", String.format("BEARER_AUTH_STRING",getToken().toString()))
+//                .addHeader("Authorization", "BEARER_AUTH_STRING "+getToken().toString())
+                .addHeader("Authorization", "Bearer "+getToken().toString())
 
-//                .addHeader("Authorization", String.format(\"%s %s\", BEARER_AUTH_STRING, accessTokenResponse.getAccessToken()))
                 .addHeader("Content-Type", "application/json")
                 .build();
 
